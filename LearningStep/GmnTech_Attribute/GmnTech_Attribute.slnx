@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="AttributeClass001/AttributeClass001.csproj" />
+  <Project Path="AttributeClass002/AttributeClass002.csproj" />
+  <Project Path="GPTAttributeClass001/GPTAttributeClass001.csproj" />
 </Solution>
