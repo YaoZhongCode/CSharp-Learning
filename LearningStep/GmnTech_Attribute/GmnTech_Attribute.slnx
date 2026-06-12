@@ -2,4 +2,9 @@
   <Project Path="AttributeClass001/AttributeClass001.csproj" />
   <Project Path="AttributeClass002/AttributeClass002.csproj" />
   <Project Path="GPTAttributeClass001/GPTAttributeClass001.csproj" />
+  <Project Path="GPTAttributeClass002/GPTAttributeClass002.csproj" />
+  <Project Path="GPTAttributeClass003/GPTAttributeClass003.csproj" />
+  <Project Path="GPTAttributeClass004/GPTAttributeClass004.csproj" />
+  <Project Path="GPTAttributeClass005/GPTAttributeClass005.csproj" />
+  <Project Path="GPTAttributeClass006/GPTAttributeClass006.csproj" />
 </Solution>
