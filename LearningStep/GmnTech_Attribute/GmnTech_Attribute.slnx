@@ -1,10 +1,20 @@
 <Solution>
   <Project Path="AttributeClass001/AttributeClass001.csproj" />
   <Project Path="AttributeClass002/AttributeClass002.csproj" />
+  <Project Path="AttributeClass003/AttributeClass003.csproj" Id="3e8d4a30-8195-43f1-baba-7d3c88b07341" />
+  <Project Path="AttributeClass004/AttributeClass004.csproj" Id="3e04acf4-7d30-4e2d-819c-d339b35880fc" />
+  <Project Path="AttributeClass005/AttributeClass005.csproj" Id="d096ec07-f5b6-4c91-8423-ea4e877f39b3" />
+  <Project Path="AttributeClass006/AttributeClass006.csproj" Id="51965ec3-10ff-4bb4-bae8-0463c13a13bc" />
+  <Project Path="AttributeClass007/AttributeClass007.csproj" Id="b7c871b7-d2f8-40ec-a6cb-29ceae4399f7" />
+  <Project Path="AttributeClass008/AttributeClass008.csproj" Id="df31720e-68e5-471d-8d84-d291e89b3318" />
   <Project Path="GPTAttributeClass001/GPTAttributeClass001.csproj" />
   <Project Path="GPTAttributeClass002/GPTAttributeClass002.csproj" />
   <Project Path="GPTAttributeClass003/GPTAttributeClass003.csproj" />
   <Project Path="GPTAttributeClass004/GPTAttributeClass004.csproj" />
   <Project Path="GPTAttributeClass005/GPTAttributeClass005.csproj" />
   <Project Path="GPTAttributeClass006/GPTAttributeClass006.csproj" />
+  <Project Path="GPTAttributeClass007/GPTAttributeClass007.csproj" Id="8a254607-960e-440a-822e-2919903ae609" />
+  <Project Path="GPTAttributeClass008/GPTAttributeClass008.csproj" Id="5daf5c87-662d-4510-88c4-40c01914cc18" />
+  <Project Path="GPTAttributeClass009/GPTAttributeClass009.csproj" Id="d9a349d5-bc40-441c-a410-947da16df6d6" />
+  <Project Path="GPTAttributeClass010/GPTAttributeClass010.csproj" Id="98250b31-562a-4fbe-841f-ddb7cd152038" />
 </Solution>
