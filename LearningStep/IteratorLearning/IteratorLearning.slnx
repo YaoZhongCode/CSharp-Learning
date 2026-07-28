@@ -16,4 +16,5 @@
   <Project Path="GPTClass007/GPTClass007.csproj" />
   <Project Path="GPTClass008/GPTClass008.csproj" />
   <Project Path="GPTClass009/GPTClass009.csproj" />
+  <Project Path="OtherExercise001/OtherExercise001.csproj" />
 </Solution>
