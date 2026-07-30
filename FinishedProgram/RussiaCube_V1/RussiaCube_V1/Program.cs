@@ -16,6 +16,7 @@ namespace RussiaCube_V1
             SceneManager sceneManager = new SceneManager();
             sceneManager.ChangeScene(new StartScene()); //开始游戏时默认进入开始场景
 
+            //游戏主循环
             while (true)
             {
                 sceneManager.UpdateScene();
