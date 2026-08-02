@@ -6,6 +6,12 @@ using RussiaCube_V1.GameObjects;
 
 namespace RussiaCube_V1.Polymer
 {
+    enum E_WallType
+    {
+        Dead,
+        Dynamic
+    }
+
     /// <summary>
     /// 游戏主体地图
     /// </summary>
@@ -15,6 +21,31 @@ namespace RussiaCube_V1.Polymer
         private List<DrawObject> _deadWalls;
         //动态墙壁
         private List<DrawObject> _dynamicWalls;
+
+        //供外部获取墙壁长度
+        public int DeadWallsLength => _deadWalls.Count;
+        public int DynamicWallsLength => _dynamicWalls.Count;
+
+        /// <summary>
+        /// 索引器
+        /// </summary>
+        /// <param name="index">索引值</param>
+        /// <param name="type">墙壁类型</param>
+        /// <returns></returns>
+        public DrawObject this[int index, E_WallType type]
+        {
+            get
+            {
+                if(type == E_WallType.Dead)
+                {
+                    return _deadWalls[index];
+                }
+                else
+                {
+                    return _dynamicWalls[index];
+                }
+            }
+        }
 
         public Map()
         {

@@ -99,6 +99,15 @@ namespace RussiaCube_V1.GameObjects
         }
 
         /// <summary>
+        /// 擦除自身
+        /// </summary>
+        public void Clear()
+        {
+            Console.SetCursorPosition(Pos.X, Pos.Y);
+            Console.Write("  ");
+        }
+
+        /// <summary>
         /// 改变形状方法
         /// </summary>
         /// <param name="cubeType">目标形状</param>
