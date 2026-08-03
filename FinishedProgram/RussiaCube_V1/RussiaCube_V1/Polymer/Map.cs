@@ -82,6 +82,11 @@ namespace RussiaCube_V1.Polymer
         /// </summary>
         public void DrawDynamicWall()
         {
+            //里面没有方块，就不画
+            if(_dynamicWalls.Count <= 0)
+            {
+                return;
+            }
             for(int i = 0; i < _dynamicWalls.Count; i++)
             {
                 _dynamicWalls[i].Draw();

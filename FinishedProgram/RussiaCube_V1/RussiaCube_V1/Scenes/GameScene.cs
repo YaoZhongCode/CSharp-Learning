@@ -9,24 +9,40 @@ namespace RussiaCube_V1.Scenes
     internal class GameScene : IScene
     {
         //创建地图
-        Map _map;
-        CubeManager _cubeManager;
+        private Map _map;
+        private CubeManager _cubeManager;
+        private Thread _inputThread;
+        private object _locker;
         public GameScene()
         {
             _map = new Map();
             _cubeManager = new CubeManager();
+            _inputThread = new Thread(Input);
+            _locker = new object();
         }
         public void Enter()
         {
             Console.Clear();
+            //线程设置为后台线程，使其跟随主线程一起结束
+            _inputThread.IsBackground = true;
+            //开启线程
+            _inputThread.Start();
             _map.DrawDeadWall(); //画出不变的墙壁
         }
 
         public IScene? Update()
         {
-            _cubeManager.Draw();
-            Input();
-
+            //保护线程安全
+            lock (_locker)
+            {
+                //画方块
+                _cubeManager.Draw();
+                //画出动态墙壁
+                _map.DrawDynamicWall();
+                //方块自动掉落
+                _cubeManager.FallDown(_map);
+            }
+            Thread.Sleep(250);
             return null;
         }
 
@@ -35,24 +51,38 @@ namespace RussiaCube_V1.Scenes
         /// </summary>
         private void Input()
         {
-            switch (Console.ReadKey(true).Key)
+            while (true)
             {
-                case ConsoleKey.LeftArrow:
-                    _cubeManager.SwitchShape(E_SwitchDirection.Left, _map);
-                    Console.SetCursorPosition(2, GameConfig.height - 6);
-                    Console.Write("按下了左箭头");
-                    break;
-                case ConsoleKey.RightArrow:
-                    _cubeManager.SwitchShape(E_SwitchDirection.Right, _map);
-                    Console.SetCursorPosition(2, GameConfig.height - 6);
-                    Console.Write("按下了右箭头");
-                    break;
-                case ConsoleKey.A:
-                    _cubeManager.MoveLeftOrRight(E_MoveDirection.Left);
-                    break;
-                case ConsoleKey.D:
-                    _cubeManager.MoveLeftOrRight(E_MoveDirection.Right);
-                    break;
+                //键盘被激活时才触发
+                if (Console.KeyAvailable)
+                {
+                    //保护线程安全
+                    lock (_locker)
+                    {
+                        switch (Console.ReadKey(true).Key)
+                        {
+                            case ConsoleKey.LeftArrow:
+                                _cubeManager.SwitchShape(E_SwitchDirection.Left, _map);
+                                Console.SetCursorPosition(2, GameConfig.height - 6);
+                                Console.Write("按下了左箭头");
+                                break;
+                            case ConsoleKey.RightArrow:
+                                _cubeManager.SwitchShape(E_SwitchDirection.Right, _map);
+                                Console.SetCursorPosition(2, GameConfig.height - 6);
+                                Console.Write("按下了右箭头");
+                                break;
+                            case ConsoleKey.A:
+                                _cubeManager.MoveLeftOrRight(E_MoveDirection.Left, _map);
+                                break;
+                            case ConsoleKey.D:
+                                _cubeManager.MoveLeftOrRight(E_MoveDirection.Right, _map);
+                                break;
+                            case ConsoleKey.S:
+                                _cubeManager.FallDown(_map);
+                                break;
+                        }
+                    }
+                }
             }
         }
     }

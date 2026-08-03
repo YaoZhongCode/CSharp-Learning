@@ -29,6 +29,7 @@ namespace RussiaCube_V1.Core
     /// </summary>
     internal class CubeManager : IDraw
     {
+        #region 成员变量
         //存储四个小方块：所有方块类型都是由四个小方块组成
         private List<DrawObject> _cubes;
         //使用字典存储所有方块类型信息
@@ -36,7 +37,7 @@ namespace RussiaCube_V1.Core
         //存储当前方块的信息
         private CubeInfo _nowCubeInfo;
         private int _nowShapeIndex;
-
+        #endregion
         public CubeManager()
         {
             _nowCubeInfo = new CubeInfo(E_CubeType.Square); //暂时先这样实例化，后续会覆盖
@@ -75,7 +76,7 @@ namespace RussiaCube_V1.Core
             };
 
             //第一个小方块需要先声明，其他三个小方块根据它的坐标进行对应偏移
-            _cubes[0].Pos = new Position(GameConfig.width / 2, 5);
+            _cubes[0].Pos = new Position(GameConfig.width / 2 - 1, 1);
 
             //获取到对应随机到的方块的具体偏移坐标数据
             _nowCubeInfo = _cubeInfoDic[type];
@@ -192,25 +193,27 @@ namespace RussiaCube_V1.Core
                 tempPos = _cubes[i + 1].Pos + pos[i];
 
                 //检查是否和墙壁重合，重合就返回false
-                for (int j =0; j < map.DeadWallsLength; j++)
+                for (int j = 0; j < map.DeadWallsLength; j++)
                 {
-                    if (tempPos.Equals(map[j, E_WallType.Dead]))
+                    if (tempPos.Equals(map[j, E_WallType.Dead].Pos))
                     {
                         return false;
                     }
                 }
+                //if(tempPos.X <= 0 || tempPos.Y >= GameConfig.height - 7)
+                //{
+                //    return false;
+                //}
+
                 //检查是否和动态墙壁重合，重合就返回false
                 for (int j = 0; j < map.DynamicWallsLength; j++)
                 {
-                    if (tempPos.Equals(map[j, E_WallType.Dynamic]))
+                    if (tempPos.Equals(map[j, E_WallType.Dynamic].Pos))
                     {
                         return false;
                     }
                 }
             }
-
-
-
             return true;
         }
 
@@ -218,8 +221,15 @@ namespace RussiaCube_V1.Core
         /// 方块左右移动方法
         /// </summary>
         /// <param name="direction">移动方向</param>
-        public void MoveLeftOrRight(E_MoveDirection direction)
+        /// <param name="map">地图信息</param>
+        public void MoveLeftOrRight(E_MoveDirection direction, Map map)
         {
+            //先检查是否可以进行移动
+            if(!IsCanMove(direction, map))
+            {
+                return;
+            }
+
             //动之前先擦除自己，避免留下残影
             Clear();
 
@@ -235,6 +245,113 @@ namespace RussiaCube_V1.Core
             }
 
             Draw();
+        }
+
+        /// <summary>
+        /// 是否可以移动方法
+        /// </summary>
+        /// <param name="direction">移动方向</param>
+        /// <param name="map">地图信息</param>
+        /// <returns></returns>
+        private bool IsCanMove(E_MoveDirection direction, Map map)
+        {
+            //获得要移动的方向位置
+            Position newPos = new Position(direction == E_MoveDirection.Left ? -2 : 2, 0);
+            //创建一个临时位置
+            Position tempPos;
+            for(int i = 0; i < _cubes.Count; i++)
+            {
+                tempPos = _cubes[i].Pos + newPos;
+                //如果任意一个小方块和不动的墙壁重合，不能移动
+                //for(int j = 0; j < map.DeadWallsLength; j++)
+                //{
+                //    if (tempPos.Equals(map[j, E_WallType.Dead].Pos))
+                //    {
+                //        return false;
+                //    }
+                //}
+
+                //如果超出横向边界，不能进行移动
+                if(tempPos.X <= 0 || tempPos.X >= GameConfig.width - 2)
+                {
+                    return false;
+                }
+            }
+
+            for(int i = 0; i < _cubes.Count; i++)
+            {
+                tempPos = _cubes[i].Pos + newPos;
+                //如果任意一个小方块和动态墙壁重合，不能移动
+                for(int j = 0; j < map.DynamicWallsLength; j++)
+                {
+                    if (tempPos.Equals(map[j, E_WallType.Dynamic].Pos))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 下落方法
+        /// </summary>
+        /// <param name="map">地图信息</param>
+        public void FallDown(Map map)
+        {
+            //判断是否可以继续下落
+            if (!IsCanFall(map))
+            {
+                //如果不能继续下落，说明已经触底
+                //添加动态墙壁，并重新生成一个新的方块
+                map.AddDynamicWalls(_cubes);
+                RandomCreateCube();
+                return;
+            }
+
+            Clear();
+
+            //下落步长
+            Position step = new Position(0, 1);
+
+            for(int i = 0; i < _cubes.Count; i++)
+            {
+                _cubes[i].Pos += step;
+            }
+
+            Draw();
+        }
+
+        /// <summary>
+        /// 是否可以继续下落
+        /// </summary>
+        /// <param name="map">地图信息</param>
+        /// <returns></returns>
+        private bool IsCanFall(Map map)
+        {
+            Position step = new Position(0, 1);
+            Position tempPos;
+            for(int i = 0; i < _cubes.Count; i++)
+            {
+                tempPos = _cubes[i].Pos + step;
+                //触碰到墙壁底部，返回false
+                if(tempPos.Y >= GameConfig.height - 7)
+                {
+                    return false;
+                }
+
+                //触碰到动态墙壁，返回false
+                for(int j = 0; j < map.DynamicWallsLength; j++)
+                {
+                    if (tempPos.Equals(map[j, E_WallType.Dynamic].Pos))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }
