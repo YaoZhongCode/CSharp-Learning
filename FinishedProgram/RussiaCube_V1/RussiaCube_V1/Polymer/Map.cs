@@ -164,6 +164,9 @@ namespace RussiaCube_V1.Polymer
                 //使用地图的宽除以2减去2得到正确的是否已经满了的数量
                 if (_mapLines[i] == (GameConfig.width/2) - 2)
                 {
+                    //每消除一行加10分
+                    ScoreData.AddScore(10);
+
                     //遍历动态墙壁
                     for(int j = 0; j < _dynamicWalls.Count; j++)
                     {

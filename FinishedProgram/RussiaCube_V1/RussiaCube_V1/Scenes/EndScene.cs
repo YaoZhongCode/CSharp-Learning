@@ -13,6 +13,13 @@ namespace RussiaCube_V1.Scenes
             _options.Add("返回主菜单");
             _options.Add("退出游戏");
         }
+        public override void Enter()
+        {
+            base.Enter();
+            Console.SetCursorPosition(GameConfig.width / 2 - 6, 13);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write($"当局总得分:{ScoreData.Score}");
+        }
 
         public override IScene? Update()
         {

@@ -19,7 +19,8 @@ namespace RussiaCube_V1.Scenes
             _nowSelectID = 0;
         }
 
-        public void Enter()
+        //允许子类重写
+        public virtual void Enter()
         {
             Console.Clear();
             Console.SetCursorPosition(GameConfig.width / 2 - _title.Length, 5);
