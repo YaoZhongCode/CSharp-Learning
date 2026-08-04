@@ -76,7 +76,7 @@ namespace RussiaCube_V1.Core
             };
 
             //第一个小方块需要先声明，其他三个小方块根据它的坐标进行对应偏移
-            _cubes[0].Pos = new Position(GameConfig.width / 2 - 1, 1);
+            _cubes[0].Pos = new Position(GameConfig.width / 2 - 1, 2);
 
             //获取到对应随机到的方块的具体偏移坐标数据
             _nowCubeInfo = _cubeInfoDic[type];

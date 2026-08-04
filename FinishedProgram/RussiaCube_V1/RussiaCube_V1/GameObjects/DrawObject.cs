@@ -52,6 +52,7 @@ namespace RussiaCube_V1.GameObjects
         private E_CubeType _cubeType;
 
         public Position Pos { get { return _pos; } set { _pos = value; } }
+        
 
         //构造函数
         public DrawObject(E_CubeType cubeType)
