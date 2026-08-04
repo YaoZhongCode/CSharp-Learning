@@ -71,6 +71,9 @@ namespace RussiaCube_V1.GameObjects
         /// </summary>
         public void Draw()
         {
+            //如果方块在屏幕外面，不用画
+            if (_pos.Y < 0) return;
+
             Console.SetCursorPosition(_pos.X, _pos.Y);
             switch (_cubeType)
             {
@@ -104,6 +107,9 @@ namespace RussiaCube_V1.GameObjects
         /// </summary>
         public void Clear()
         {
+            //如果方块在屏幕外面，不用擦除
+            if (_pos.Y < 0) return;
+
             Console.SetCursorPosition(Pos.X, Pos.Y);
             Console.Write("  ");
         }

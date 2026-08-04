@@ -1,5 +1,6 @@
 ﻿using RussiaCube_V1.GameObjects;
 using RussiaCube_V1.Polymer;
+using RussiaCube_V1.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -76,7 +77,7 @@ namespace RussiaCube_V1.Core
             };
 
             //第一个小方块需要先声明，其他三个小方块根据它的坐标进行对应偏移
-            _cubes[0].Pos = new Position(GameConfig.width / 2 - 1, 2);
+            _cubes[0].Pos = new Position(GameConfig.width / 2 - 1, -5);
 
             //获取到对应随机到的方块的具体偏移坐标数据
             _nowCubeInfo = _cubeInfoDic[type];
@@ -298,16 +299,22 @@ namespace RussiaCube_V1.Core
         /// 下落方法
         /// </summary>
         /// <param name="map">地图信息</param>
-        public void FallDown(Map map)
+        public IScene? FallDown(Map map)
         {
             //判断是否可以继续下落
             if (!IsCanFall(map))
             {
                 //如果不能继续下落，说明已经触底
                 //添加动态墙壁，并重新生成一个新的方块
-                map.AddDynamicWalls(_cubes);
+                //并记录是否结束游戏
+                bool isFinished = map.AddDynamicWalls(_cubes);
+                if (isFinished)
+                {
+                    return new EndScene();
+                }
+
                 RandomCreateCube();
-                return;
+                return null;
             }
 
             Clear();
@@ -321,6 +328,7 @@ namespace RussiaCube_V1.Core
             }
 
             Draw();
+            return null;
         }
 
         /// <summary>

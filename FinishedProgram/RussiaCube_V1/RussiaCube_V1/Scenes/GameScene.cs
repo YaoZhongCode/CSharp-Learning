@@ -30,8 +30,10 @@ namespace RussiaCube_V1.Scenes
             _map.DrawDeadWall(); //画出不变的墙壁
         }
 
+        
         public IScene? Update()
         {
+            IScene? nextScene = null;
             //保护线程安全
             lock (_locker)
             {
@@ -40,7 +42,12 @@ namespace RussiaCube_V1.Scenes
                 //画出动态墙壁
                 _map.DrawDynamicWall();
                 //方块自动掉落
-                _cubeManager.FallDown(_map);
+                 nextScene = _cubeManager.FallDown(_map);
+                //每次检测是否已经结束游戏，结束就返回结束场景
+                if (nextScene != null)
+                {
+                    return nextScene;
+                }
             }
             Thread.Sleep(250);
             return null;

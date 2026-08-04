@@ -22,6 +22,8 @@ namespace RussiaCube_V1.Polymer
         //动态墙壁
         private List<DrawObject> _dynamicWalls;
 
+        
+
         //供外部获取墙壁长度
         public int DeadWallsLength => _deadWalls.Count;
         public int DynamicWallsLength => _dynamicWalls.Count;
@@ -105,13 +107,20 @@ namespace RussiaCube_V1.Polymer
         /// 添加动态墙壁
         /// </summary>
         /// <param name="walls">要添加的方块数据</param>
-        public void AddDynamicWalls(List<DrawObject> cubes)
+        /// <returns>返回是否已经结束</returns>
+        public bool AddDynamicWalls(List<DrawObject> cubes)
         {
             for(int i = 0; i < cubes.Count; i++)
             {
                 //先把类型转换为墙壁（主要是颜色区分）
                 cubes[i].ChangeType(E_CubeType.Wall);
                 _dynamicWalls.Add(cubes[i]); //添加到动态墙壁里面去
+
+                if (cubes[i].Pos.Y == 0)
+                {
+                    //添加的方块的Y值已经等于0，说明已经顶到最顶部，结束游戏
+                    return true;
+                } 
 
                 //每次添加动态墙壁，就去更新对应小方块的行里面的计数
                 //根据索引来得到对应行
@@ -121,6 +130,9 @@ namespace RussiaCube_V1.Polymer
             ClearDynamicWalls();
             ClearCube();
             DrawDynamicWall();
+
+
+            return false;
         }
 
         /// <summary>
