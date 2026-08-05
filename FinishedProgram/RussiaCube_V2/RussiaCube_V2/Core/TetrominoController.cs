@@ -58,7 +58,7 @@ namespace RussiaCube_V2.Core
         /// </summary>
         /// <param name="direction">方向</param>
         /// <param name="map">地图信息</param>
-        /// <returns></returns>
+        /// <returns>true表示可以移动，false表示无法移动</returns>
         public bool TryMove(Position direction, GridMap map)
         {
             Position targetPos = Position + direction;
