@@ -82,7 +82,7 @@ namespace RussiaCube_V2.Scenes
             ConsoleRenderer.DrawText(25, 2, $"当前得分：{_scoreManager.Score}");
         }
 
-        public void Update()
+        public IScene? Update()
         {
             //处理方块自动下落（每 500ms 掉落一格）
             if ((DateTime.Now - _lastDropTime).TotalMilliseconds >= 500)
@@ -93,9 +93,18 @@ namespace RussiaCube_V2.Scenes
                 if(!_controller.TryMove(new Position(0, 1), _map))
                 {
                     //固定方块并生成新方块
-                    LockTetrominoAndSpawnNext();
+                    bool temp = LockTetrominoAndSpawnNext();
+
+                    if(temp )
+                    {
+                        return new EndScene();
+                    }
                 }
+
+
             }
+
+            return null;
         }
 
         /// <summary>
@@ -142,7 +151,7 @@ namespace RussiaCube_V2.Scenes
         /// <summary>
         /// 固定方块并生成新方块
         /// </summary>
-        private void LockTetrominoAndSpawnNext()
+        private bool LockTetrominoAndSpawnNext()
         {
             //将当前小方块固定到地图中
             foreach(var pos in _controller.GetWorldPositions())
@@ -152,7 +161,21 @@ namespace RussiaCube_V2.Scenes
 
             _map.ClearFullLines();
 
-            SpawnNewTetromino();
+            TetrominoType randomType = (TetrominoType)Random.Shared.Next(0, 7);
+            Position startPos = new Position(_map.Width / 2 - 1, 0);
+
+            //先检查起点是否被占
+            if (_map.IsOccupied(startPos))
+            {
+
+
+
+                return true ;
+            }
+
+            _controller.Spawn(randomType, startPos, ConsoleColor.Yellow);
+
+            return false;
         }
 
         /// <summary>

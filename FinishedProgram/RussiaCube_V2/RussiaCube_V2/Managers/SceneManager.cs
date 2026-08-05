@@ -32,8 +32,17 @@ namespace RussiaCube_V2.Managers
         /// </summary>
         public void Update()
         {
+            IScene? nextScene = null;
+
             // 如果 _currentScene 不为空，调用它的 Update()
-            _currentScene?.Update();
+            nextScene = _currentScene?.Update();
+
+            //如果下一个场景不为空，说明需要切换场景
+            if(nextScene != null)
+            {
+                ChangeScene(nextScene);
+            }
+
         }
 
         /// <summary>
