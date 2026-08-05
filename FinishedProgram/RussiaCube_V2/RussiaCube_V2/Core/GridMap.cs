@@ -10,11 +10,15 @@ namespace RussiaCube_V2.Core
     /// </summary>
     internal class GridMap
     {
+        //格子地图宽
         public int Width { get; }
+        //格子地图高
         public int Height { get; }
 
         //二维数组：存储网格中每个格子的颜色状态（null 代表空）
         private readonly ConsoleColor?[,] _grid;
+
+        public event Action<int>? OnLinesCleared;
 
         public GridMap(int width, int height)
         {
@@ -82,6 +86,81 @@ namespace RussiaCube_V2.Core
             }
 
                 return null;
+        }
+
+        /// <summary>
+        /// 检查并消除满行
+        /// </summary>
+        /// <returns>返回本次消除的总行数</returns>
+        public int ClearFullLines()
+        {
+            //记录消除了几行
+            int lineCleared = 0;
+
+            //遍历从第一行（地图最底部）到最后一行
+            for(int y = Height - 1; y >= 0; y--)
+            {
+                //如果该行格子满了
+                if (IsLineFull(y))
+                {
+                    //消除行数自增
+                    lineCleared++;
+
+                    //整体往下移动一格（相当于消除了此行）
+                    ShiftRowsDown(y);
+
+                    //因为上方掉落下来到了当前的y行，需要重新检测一遍当前的y行
+                    y++;
+                }
+            }
+
+            //如果有行被消除，广播事件
+            if (lineCleared > 0) OnLinesCleared?.Invoke(lineCleared);
+            //返回出去消除的行数
+            return lineCleared;
+        }
+
+        /// <summary>
+        /// 是否满行
+        /// </summary>
+        /// <param name="y">y坐标</param>
+        /// <returns></returns>
+        private bool IsLineFull(int y)
+        {
+            for(int x =0; x < Width; x++)
+            {
+                if (_grid[x, y] == null)
+                {
+                    //只要有一格为空，说明还未满行，返回false
+                    return false; 
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 将指定行上的所有整体下移一格
+        /// </summary>
+        /// <param name="targetY">指定行</param>
+        private void ShiftRowsDown(int targetY)
+        {
+            //从被消除那一行开始，向上遍历所有格
+            //y轴（不遍历最后一行）
+            for(int y = targetY; y > 0; y--)
+            {
+                //x轴
+                for(int x = 0; x < Width; x++)
+                {
+                    //下移一格
+                    _grid[x, y] = _grid[x, y - 1];
+                }
+            }
+
+            //最顶上一行已是最后一行，其上面无格子，直接清空
+            for(int x = 0; x < Width; x++)
+            {
+                _grid[x, 0] = null;
+            }
         }
     }
 }
