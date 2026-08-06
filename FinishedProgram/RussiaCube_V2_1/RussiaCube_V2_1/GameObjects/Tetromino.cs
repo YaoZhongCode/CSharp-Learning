@@ -11,7 +11,7 @@ namespace RussiaCube_V2_1.GameObjects
     internal class Tetromino
     {
         //内部集合
-        private List<Block> _blocks;
+        private readonly List<Block> _blocks;
 
         //供外部只读取，无法修改
         public IReadOnlyList<Block> Blocks => _blocks;
