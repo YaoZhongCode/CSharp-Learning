@@ -13,6 +13,8 @@ namespace RussiaCube_V2_1.GameObjects
         //内部集合
         private readonly List<Block> _blocks;
 
+        public int BlockCount => _blocks.Count;
+
         //供外部只读取，无法修改
         public IReadOnlyList<Block> Blocks => _blocks;
 
