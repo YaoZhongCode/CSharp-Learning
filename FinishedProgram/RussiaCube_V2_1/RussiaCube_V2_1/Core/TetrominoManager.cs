@@ -15,7 +15,7 @@ namespace RussiaCube_V2_1.Core
         private readonly Map _map;
 
         //各种类型的旋转角度信息
-        private readonly Dictionary<TetrominoType, TetrominoInfo> _info;
+        private readonly Dictionary<TetrominoType, TetrominoInfo> _infos;
 
         private Tetromino _currentTetromino;
         public Tetromino CurrentTetromino => _currentTetromino;
@@ -26,7 +26,7 @@ namespace RussiaCube_V2_1.Core
             _map = map;
 
             //将所有形状的旋转信息存到字典中
-            _info = new Dictionary<TetrominoType, TetrominoInfo>()
+            _infos = new Dictionary<TetrominoType, TetrominoInfo>()
             {
                 { TetrominoType.O, new TetrominoInfo(TetrominoType.O) },
                 {TetrominoType.T, new TetrominoInfo(TetrominoType.T) },
@@ -44,9 +44,10 @@ namespace RussiaCube_V2_1.Core
         {
             //获取一个随机的类型
             TetrominoType type = (TetrominoType)Random.Shared.Next(0, 7);
+            //同步当前方块类型
             _currentTetromino = new Tetromino(type);
             //根据随机到的方块类型，获取对应的旋转信息
-            TetrominoInfo info = _info[type];
+            TetrominoInfo info = _infos[type];
             //取出第一个旋转信息组
             Position[] pos = info[0];
             //创建出生地点
