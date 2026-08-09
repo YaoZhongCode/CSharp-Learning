@@ -13,5 +13,7 @@ namespace RussiaCube_V2_1.Scenes
         /// 进入场景时调用
         /// </summary>
         void Enter();
+
+        void Update();
     }
 }

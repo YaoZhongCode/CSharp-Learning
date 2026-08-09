@@ -16,11 +16,19 @@ namespace RussiaCube_V2_1.Scenes
         //方块管理
         private readonly TetrominoManager _tetrominoManager;
 
+        //记录上次掉落时间
+        private DateTime _lastFallTime;
+
+        //掉落间隔
+        private readonly TimeSpan _fallInterval;
+
         public GameScene()
         {
             //初始化地图和方块管理器
             _map = new Map(10, 20);
             _tetrominoManager = new TetrominoManager(_map);
+            _lastFallTime = DateTime.Now;
+            _fallInterval = TimeSpan.FromMilliseconds(500);
         }
 
         public void Enter()
@@ -29,35 +37,47 @@ namespace RussiaCube_V2_1.Scenes
             _tetrominoManager.Spawn();
         }
 
-
+        
         public void Update()
         {
+            HandleInput();
+            if(DateTime.Now - _lastFallTime >= _fallInterval)
+            {
+                _tetrominoManager.Fall();
+                _lastFallTime = DateTime.Now;
+            }
 
         }
 
+        /// <summary>
+        /// 输入管理
+        /// </summary>
         private void HandleInput()
         {
-            ConsoleKey key = Console.ReadKey(true).Key;
-
-            switch (key)
+            //有键盘按下时才进入逻辑
+            if (Console.KeyAvailable)
             {
-                case ConsoleKey.LeftArrow:
-                case ConsoleKey.A:
-                    _tetrominoManager.Move(new Position(-1, 0));
-                    break;
-                case ConsoleKey.RightArrow:
-                case ConsoleKey.D:
-                    _tetrominoManager.Move(new Position(1, 0));
-                    break;
-                case ConsoleKey.DownArrow:
-                case ConsoleKey.S:
-                    _tetrominoManager.Fall();
-                    break;
-                case ConsoleKey.J:
-                    _tetrominoManager.Rotate();
-                    break;
-            }
+                ConsoleKey key = Console.ReadKey(true).Key;
 
+                switch (key)
+                {
+                    case ConsoleKey.LeftArrow:
+                    case ConsoleKey.A:
+                        _tetrominoManager.Move(new Position(-1, 0));
+                        break;
+                    case ConsoleKey.RightArrow:
+                    case ConsoleKey.D:
+                        _tetrominoManager.Move(new Position(1, 0));
+                        break;
+                    case ConsoleKey.DownArrow:
+                    case ConsoleKey.S:
+                        _tetrominoManager.Fall();
+                        break;
+                    case ConsoleKey.J:
+                        _tetrominoManager.Rotate();
+                        break;
+                }
+            }
         }
     }
 }

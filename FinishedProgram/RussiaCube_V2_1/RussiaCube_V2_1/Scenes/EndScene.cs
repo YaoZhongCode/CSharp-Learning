@@ -10,5 +10,10 @@ namespace RussiaCube_V2_1.Scenes
         {
             Console.WriteLine("End Scene");
         }
+
+        public void Update()
+        {
+
+        }
     }
 }
