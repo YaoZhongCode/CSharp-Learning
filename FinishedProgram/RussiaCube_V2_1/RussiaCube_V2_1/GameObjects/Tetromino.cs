@@ -20,6 +20,13 @@ namespace RussiaCube_V2_1.GameObjects
 
         //方块类型
         public TetrominoType Type { get; }
+
+        //当前方块的绝对位置（地图上）
+        public Position Position { get; private set; }
+
+        //当前方块的旋转索引
+        public int RotationIndex { get; private set; }
+
         public Tetromino(TetrominoType type)
         {
             Type = type;
@@ -32,6 +39,20 @@ namespace RussiaCube_V2_1.GameObjects
                 new Block(new Position(0, 0), type),
                 new Block(new Position(0, 0), type)
             };
+        }
+
+        /// <summary>
+        /// 应用旋转索引并修改位置
+        /// </summary>
+        /// <param name="rotationIndex">目标旋转索引</param>
+        /// <param name="newPositions">目标绝对位置</param>
+        public void ApplyRotation(int rotationIndex, Position[] newPositions)
+        {
+            RotationIndex = rotationIndex;
+            for(int i = 0; i < Blocks.Count; i++)
+            {
+                Blocks[i].Pos = newPositions[i];
+            }
         }
     }
 }

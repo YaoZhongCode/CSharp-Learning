@@ -12,9 +12,9 @@ namespace RussiaCube_V2_1.Scenes
     internal class GameScene : IScene
     {
         //地图
-        private Map _map;
+        private readonly Map _map;
         //方块管理
-        private TetrominoManager _tetrominoManager;
+        private readonly TetrominoManager _tetrominoManager;
 
         public GameScene()
         {
