@@ -127,5 +127,19 @@ namespace RussiaCube_V2_1.Maps
                 _blocks[x, 0] = null;
             }
         }
+
+        /// <summary>
+        /// 将活动方块转换为固定方块
+        /// </summary>
+        /// <param name="tetromino">要固定的方块</param>
+        public void PlaceTetromino(Tetromino tetromino)
+        {
+            //遍历方块里的所有小方块
+            foreach(var b in tetromino.Blocks)
+            {
+                //逐个固定到地图里
+                _blocks[b.Pos.X, b.Pos.Y] = b;
+            }
+        }
     }
 }

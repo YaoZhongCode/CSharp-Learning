@@ -20,6 +20,8 @@ namespace RussiaCube_V2_1.Core
         private Tetromino _currentTetromino;
         public Tetromino CurrentTetromino => _currentTetromino;
 
+        public int LastClearedRows { get; private set; }
+
         public TetrominoManager(Map map)
         {
             //拿到地图引用
@@ -128,7 +130,29 @@ namespace RussiaCube_V2_1.Core
         /// <returns>true=下落成功 false=下落失败</returns>
         public bool Fall()
         {
-            return Move(new Position(0, 1));
+            LastClearedRows = 0;
+            //移动失败时
+            if(!Move(new Position(0, 1)))
+            {
+                //固定地图
+                LastClearedRows = LockTetromino();
+                //返回移动失败
+
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 固定方块并检查消除满行
+        /// </summary>
+        /// <returns>消除的行数</returns>
+        private int LockTetromino()
+        {
+            _map.PlaceTetromino(_currentTetromino);
+            return _map.ClearFullRows();
+
         }
 
         /// <summary>

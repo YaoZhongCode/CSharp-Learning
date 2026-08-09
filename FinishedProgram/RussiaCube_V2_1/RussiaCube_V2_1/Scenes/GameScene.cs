@@ -16,6 +16,8 @@ namespace RussiaCube_V2_1.Scenes
         //方块管理
         private readonly TetrominoManager _tetrominoManager;
 
+        private readonly ScoreManager _scoreManager;
+
         //记录上次掉落时间
         private DateTime _lastFallTime;
 
@@ -27,6 +29,7 @@ namespace RussiaCube_V2_1.Scenes
             //初始化地图和方块管理器
             _map = new Map(10, 20);
             _tetrominoManager = new TetrominoManager(_map);
+            _scoreManager = new ScoreManager();
             _lastFallTime = DateTime.Now;
             _fallInterval = TimeSpan.FromMilliseconds(500);
         }
@@ -41,9 +44,11 @@ namespace RussiaCube_V2_1.Scenes
         public void Update()
         {
             HandleInput();
+
+            //隔一段时间自动下落
             if(DateTime.Now - _lastFallTime >= _fallInterval)
             {
-                _tetrominoManager.Fall();
+                HandleFall();
                 _lastFallTime = DateTime.Now;
             }
 
@@ -71,12 +76,27 @@ namespace RussiaCube_V2_1.Scenes
                         break;
                     case ConsoleKey.DownArrow:
                     case ConsoleKey.S:
-                        _tetrominoManager.Fall();
+                        HandleFall();
                         break;
                     case ConsoleKey.J:
                         _tetrominoManager.Rotate();
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 处理下落检测消除行数加分逻辑
+        /// </summary>
+        private void HandleFall()
+        {
+            bool fallSuccess = _tetrominoManager.Fall();
+
+            //如果下落失败并且消除行数大于0
+            if (!fallSuccess && _tetrominoManager.LastClearedRows > 0)
+            {
+                //更新分数
+                _scoreManager.AddScore(_tetrominoManager.LastClearedRows);
             }
         }
     }
