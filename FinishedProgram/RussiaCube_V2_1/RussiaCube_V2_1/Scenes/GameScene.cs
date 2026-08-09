@@ -28,5 +28,36 @@ namespace RussiaCube_V2_1.Scenes
             //生成方块
             _tetrominoManager.Spawn();
         }
+
+
+        public void Update()
+        {
+
+        }
+
+        private void HandleInput()
+        {
+            ConsoleKey key = Console.ReadKey(true).Key;
+
+            switch (key)
+            {
+                case ConsoleKey.LeftArrow:
+                case ConsoleKey.A:
+                    _tetrominoManager.Move(new Position(-1, 0));
+                    break;
+                case ConsoleKey.RightArrow:
+                case ConsoleKey.D:
+                    _tetrominoManager.Move(new Position(1, 0));
+                    break;
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
+                    _tetrominoManager.Fall();
+                    break;
+                case ConsoleKey.J:
+                    _tetrominoManager.Rotate();
+                    break;
+            }
+
+        }
     }
 }
