@@ -2,6 +2,7 @@
 using RussiaCube_V2_1.Maps;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace RussiaCube_V2_1.Core
@@ -56,8 +57,8 @@ namespace RussiaCube_V2_1.Core
             //取出第一个旋转信息组
             Position[] pos = info[0];
             //创建出生地点
-            Position spawnPosition = new Position(_map.Width / 2, 0);
-
+            Position spawnPosition = new Position(_map.Width / 2, 1);
+            _currentTetromino.SetPosition(spawnPosition);
             //更新每个小方块在地图上的绝对位置
             for (int i = 0; i < _currentTetromino.BlockCount; i++)
             {
@@ -89,22 +90,20 @@ namespace RussiaCube_V2_1.Core
                     return false;
                 }
             }
-
-
             return true;
         }
 
-        /// <summary>
-        /// 确认可以移动后，设置到目标位置
-        /// </summary>
-        /// <param name="offset">偏移</param>
-        private void ApplyOffset(Position offset)
-        {
-            foreach(var b in _currentTetromino.Blocks)
-            {
-                b.Pos += offset;
-            }
-        } 
+        ///// <summary>
+        ///// 确认可以移动后，设置到目标位置
+        ///// </summary>
+        ///// <param name="offset">偏移</param>
+        //private void ApplyOffset(Position offset)
+        //{
+        //    foreach(var b in _currentTetromino.Blocks)
+        //    {
+        //        b.Pos += offset;
+        //    }
+        //} 
 
         /// <summary>
         /// 移动方法
@@ -120,9 +119,29 @@ namespace RussiaCube_V2_1.Core
             }
 
             //可以移动，设置到目标位置并返回true
-            ApplyOffset(offset);
+            _currentTetromino.ApplyOffset(offset);
             return true;
         }
+
+        ///// <summary>
+        ///// 下落方法
+        ///// </summary>
+        ///// <param name="position">下落位置</param>
+        ///// <returns></returns>
+        //public bool MoveDown(Position position)
+        //{
+        //    foreach (var b in _currentTetromino.Blocks)
+        //    {
+        //        Position nextPos = b.Pos + position;
+
+        //        //如果被占用，不能下落
+        //        if (_map.IsOccupied(nextPos))
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //    return true;
+        //}
 
         /// <summary>
         /// 方块下落方法
@@ -132,12 +151,14 @@ namespace RussiaCube_V2_1.Core
         {
             LastClearedRows = 0;
             //移动失败时
-            if(!Move(new Position(0, 1)))
+            if (!Move(new Position(0, 1)))
             {
                 //固定地图
                 LastClearedRows = LockTetromino();
-                //返回移动失败
 
+                Spawn();
+
+                //返回移动失败
                 return false;
             }
 

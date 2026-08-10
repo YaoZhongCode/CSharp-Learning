@@ -1,5 +1,6 @@
 ﻿using RussiaCube_V2_1.Core;
 using RussiaCube_V2_1.Maps;
+using RussiaCube_V2_1.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -134,6 +135,12 @@ namespace RussiaCube_V2_1.Scenes
                 _speedLevel = score / _config.CheckScore;
                 _fallInterval -= TimeSpan.FromMilliseconds(50);
             }
+        }
+
+        public void Render()
+        {
+            ConsoleRenderer.DrawMap(_map);
+            ConsoleRenderer.DrawTetromino(_tetrominoManager.CurrentTetromino);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace RussiaCube_V2_1.Core
     internal class GameConfig
     {
         //地图宽度
-        public int MapWidth { get; } = 10;
+        public int MapWidth { get; } = 11;
 
         //地图高度
         public int MapHeight { get; } = 20;

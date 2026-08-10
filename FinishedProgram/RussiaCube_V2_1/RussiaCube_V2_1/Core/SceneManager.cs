@@ -15,7 +15,7 @@ namespace RussiaCube_V2_1.Core
 
         public SceneManager()
         {
-            _currentScene = new StartScene();
+            _currentScene = new GameScene();
             _currentScene?.Enter();
         }
 
@@ -36,6 +36,11 @@ namespace RussiaCube_V2_1.Core
         public void Update()
         {
             _currentScene?.Update();
+        }
+
+        public void Render()
+        {
+            _currentScene?.Render();
         }
     }
 }

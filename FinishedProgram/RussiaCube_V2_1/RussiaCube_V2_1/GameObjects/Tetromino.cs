@@ -13,6 +13,8 @@ namespace RussiaCube_V2_1.GameObjects
         //内部集合
         private readonly List<Block> _blocks;
 
+        //方块颜色
+        public ConsoleColor Color { get; }
         public int BlockCount => _blocks.Count;
 
         //供外部只读取，无法修改
@@ -24,12 +26,47 @@ namespace RussiaCube_V2_1.GameObjects
         //当前方块的绝对位置（地图上）
         public Position Position { get; private set; }
 
+        /// <summary>
+        /// 设置方块的整体位置
+        /// </summary>
+        /// <param name="position">新的整体位置</param>
+        public void SetPosition(Position position)
+        {
+            Position = position;
+        }
+
         //当前方块的旋转索引
         public int RotationIndex { get; private set; }
 
         public Tetromino(TetrominoType type)
         {
             Type = type;
+
+            //初始化颜色
+            switch (type)
+            {
+                case TetrominoType.O:
+                    Color = ConsoleColor.Magenta;
+                    break;
+                case TetrominoType.T:
+                    Color = ConsoleColor.Blue;
+                    break;
+                case TetrominoType.I:
+                    Color = ConsoleColor.Green;
+                    break;
+                case TetrominoType.J:
+                    Color = ConsoleColor.Cyan;
+                    break;
+                case TetrominoType.L:
+                    Color = ConsoleColor.Gray;
+                    break;
+                case TetrominoType.S:
+                    Color = ConsoleColor.Yellow;
+                    break;
+                case TetrominoType.Z:
+                    Color = ConsoleColor.Red;
+                    break;
+            }
 
             //初始化方块
             _blocks = new List<Block>()
@@ -52,6 +89,20 @@ namespace RussiaCube_V2_1.GameObjects
             for(int i = 0; i < Blocks.Count; i++)
             {
                 Blocks[i].Pos = newPositions[i];
+            }
+        }
+
+        /// <summary>
+        /// 移动整个方块
+        /// </summary>
+        /// <param name="offset">移动偏移量</param>
+        public void ApplyOffset(Position offset)
+        {
+            Position += offset;
+
+            foreach (Block block in Blocks)
+            {
+                block.Pos += offset;
             }
         }
     }

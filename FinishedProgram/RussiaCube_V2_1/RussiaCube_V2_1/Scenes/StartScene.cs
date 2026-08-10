@@ -16,6 +16,11 @@ namespace RussiaCube_V2_1.Scenes
             
         }
 
+        public void Render()
+        {
+
+        }
+
         public void Update()
         {
 

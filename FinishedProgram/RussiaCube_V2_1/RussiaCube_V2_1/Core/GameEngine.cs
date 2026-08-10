@@ -32,7 +32,8 @@ namespace RussiaCube_V2_1.Core
             {
                 //循环更新当前场景
                 _sceneManager.Update();
-
+                //渲染当前场景
+                _sceneManager.Render();
                 //休眠10毫秒，防止CPU空转
                 Thread.Sleep(10);
             }

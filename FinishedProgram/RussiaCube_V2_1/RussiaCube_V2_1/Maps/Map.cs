@@ -42,7 +42,7 @@ namespace RussiaCube_V2_1.Maps
             //Y 轴需要大于等于0且小于高度
             // 都符合说明在地图内 返回true
             //都不符合说明不在地图内 返回false
-            return pos.X >= 0 && pos.X < Width && pos.Y >= 0 && pos.Y < Height;
+            return pos.X >= 1 && pos.X < Width && pos.Y >= 0 && pos.Y < Height;
         }
 
         /// <summary>
@@ -52,6 +52,7 @@ namespace RussiaCube_V2_1.Maps
         /// <returns>true=被占用, false=该位置空</returns>
         public bool IsOccupied(Position pos)
         {
+            //if (pos.Y < 0) return false;
             //如果棋盘的该位置不为空，说明有东西存在，返回true(被占用)
             if (_blocks[pos.X, pos.Y] != null) return true;
 
@@ -93,7 +94,7 @@ namespace RussiaCube_V2_1.Maps
         /// <returns></returns>
         private bool IsRowFull(int y)
         {
-            for(int x = 0; x < Width; x++)
+            for(int x = 1; x < Width; x++)
             {
                 //如果该高度里有任一一格空，不满行，返回false
                 if (_blocks[x, y] == null)
@@ -114,7 +115,7 @@ namespace RussiaCube_V2_1.Maps
             //将指定行之后的每一行都下移
             for(int y = targetY; y > 0; y--)
             {
-                for(int x = 0; x < Width; x++)
+                for(int x = 1; x < Width; x++)
                 {
                     _blocks[x, y] = _blocks[x, y - 1];
                 }
@@ -122,7 +123,7 @@ namespace RussiaCube_V2_1.Maps
 
             //置空最上面一行
             //（它的上面已没有方块可以下移，它本身的数据已下移，所以需要清空）
-            for(int x = 0; x < Width; x++)
+            for(int x = 1; x < Width; x++)
             {
                 _blocks[x, 0] = null;
             }
@@ -137,6 +138,7 @@ namespace RussiaCube_V2_1.Maps
             //遍历方块里的所有小方块
             foreach(var b in tetromino.Blocks)
             {
+                //Console.WriteLine($"Place: X={b.Pos.X}, Y={b.Pos.Y}");
                 //逐个固定到地图里
                 _blocks[b.Pos.X, b.Pos.Y] = b;
             }
