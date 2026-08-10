@@ -16,28 +16,41 @@ namespace RussiaCube_V2_1.Scenes
         //方块管理
         private readonly TetrominoManager _tetrominoManager;
 
+        //分数管理
         private readonly ScoreManager _scoreManager;
 
         //记录上次掉落时间
         private DateTime _lastFallTime;
 
         //掉落间隔
-        private readonly TimeSpan _fallInterval;
+        private TimeSpan _fallInterval;
+
+        //游戏配置信息
+        private readonly GameConfig _config;
+
+        //速度等级
+        private int _speedLevel;
 
         public GameScene()
         {
+            _config = new GameConfig();
             //初始化地图和方块管理器
-            _map = new Map(10, 20);
+            _map = new Map(_config.MapWidth, _config.MapHeight);
             _tetrominoManager = new TetrominoManager(_map);
-            _scoreManager = new ScoreManager();
-            _lastFallTime = DateTime.Now;
-            _fallInterval = TimeSpan.FromMilliseconds(500);
+            _scoreManager = new ScoreManager(_config);
+            _fallInterval = TimeSpan.FromMilliseconds(_config.FallIntervalMilliseconds);
+            _speedLevel = 0;
         }
 
         public void Enter()
         {
             //生成方块
             _tetrominoManager.Spawn();
+
+            _lastFallTime = DateTime.Now;
+
+            //订阅分数改变事件
+            _scoreManager.OnScoreChange += CheckSpeed;
         }
 
         
@@ -97,6 +110,29 @@ namespace RussiaCube_V2_1.Scenes
             {
                 //更新分数
                 _scoreManager.AddScore(_tetrominoManager.LastClearedRows);
+            }
+        }
+
+        public void Exit()
+        {
+            //解绑分数改变事件
+            _scoreManager.OnScoreChange -= CheckSpeed;
+        }
+
+        /// <summary>
+        /// 检查分数，达到条件就加快掉落速度
+        /// </summary>
+        /// <param name="score">当前分数</param>
+        private void CheckSpeed(int score)
+        {
+            //如果分数达到设定的条件，就加快方块下落速度，否则不做任何处理
+            //同时限制最低下落速度，以免降到0
+            if(score / _config.CheckScore > _speedLevel && _fallInterval >= TimeSpan.FromMilliseconds(_config.MinimumFallIntervalMilliseconds))
+            {
+                //更新等级，等待下次超过这个等级时再次加速
+                //由于不可能一次性消除获得3000分，所以不会存在需要加速两次却只加速一次的问题
+                _speedLevel = score / _config.CheckScore;
+                _fallInterval -= TimeSpan.FromMilliseconds(50);
             }
         }
     }

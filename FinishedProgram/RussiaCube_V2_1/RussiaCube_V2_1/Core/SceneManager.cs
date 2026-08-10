@@ -25,6 +25,7 @@ namespace RussiaCube_V2_1.Core
         /// <param name="targetScene">目标场景</param>
         public void ChangeScene(IScene targetScene)
         {
+            _currentScene?.Exit();
             _currentScene = targetScene;
             _currentScene?.Enter();
         }

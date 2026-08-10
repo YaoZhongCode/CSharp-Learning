@@ -9,13 +9,17 @@ namespace RussiaCube_V2_1.Core
     /// </summary>
     internal class ScoreManager
     {
+        //分数改变事件
+        public event Action<int>? OnScoreChange;
+
         //当前分数
         public int Score { get; private set; }
         private readonly GameConfig _config;
 
-        public ScoreManager()
+        public ScoreManager(GameConfig config)
         {
-            _config = new GameConfig();
+            //拿到游戏配置引用
+            _config = config;
         }
 
         /// <summary>
@@ -24,6 +28,7 @@ namespace RussiaCube_V2_1.Core
         /// <param name="clearedRows">消除的行数</param>
         public void AddScore(int clearedRows)
         {
+            
             //可以确定一次最多只能消除4行
             //所以switch分出4个分支来处理加分
             switch (clearedRows)
@@ -41,6 +46,9 @@ namespace RussiaCube_V2_1.Core
                     Score += _config.FourRowScore;
                     break;
             }
+
+            //广播：分数变了！谁关心谁处理！
+            OnScoreChange?.Invoke(Score);
         }
     }
 }

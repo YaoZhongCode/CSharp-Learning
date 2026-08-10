@@ -15,5 +15,7 @@ namespace RussiaCube_V2_1.Scenes
         void Enter();
 
         void Update();
+
+        void Exit();
     }
 }
